@@ -17,6 +17,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 import { CameraDetailScreen } from "./components/Camera";
+import { decryptPayload, encryptPayload } from "./utils/encryption";
 
 const NETWORK = clusterApiUrl("mainnet-beta");
 
@@ -29,30 +30,6 @@ const onSignMessageRedirectLink = Linking.createURL("onSignMessage");
 
 const buildUrl = (path: string, params: URLSearchParams) =>
   `https://phantom.app/ul/v1/${path}?${params.toString()}`;
-
-const decryptPayload = (data: string, nonce: string, sharedSecret?: Uint8Array) => {
-  if (!sharedSecret) throw new Error("missing shared secret");
-
-  const decryptedData = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret);
-  if (!decryptedData) {
-    throw new Error("Unable to decrypt data");
-  }
-  return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
-};
-
-const encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
-  if (!sharedSecret) throw new Error("missing shared secret");
-
-  const nonce = nacl.randomBytes(24);
-
-  const encryptedPayload = nacl.box.after(
-    Buffer.from(JSON.stringify(payload)),
-    nonce,
-    sharedSecret
-  );
-
-  return [nonce, encryptedPayload];
-};
 
 export default function App() {
   const [deepLink, setDeepLink] = useState<string>("");
