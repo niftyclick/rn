@@ -175,7 +175,7 @@ export default function App() {
   const connect = async () => {
     const params = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
-      cluster: "mainnet-beta",
+      cluster: "devnet",
       app_url: "https://phantom.app",
       redirect_link: onConnectRedirectLink,
     });
