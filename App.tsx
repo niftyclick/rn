@@ -22,6 +22,7 @@ import MintImageStack from "./routes/MintImageStack";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Drawer from "./routes/Drawer";
+import { NiftyAppProvider } from "./utils/context";
 
 const NETWORK = clusterApiUrl("devnet");
 
@@ -371,9 +372,11 @@ export default function App() {
     return <AppLoading />;
   } else {
     return (
-      <NativeBaseProvider>
-        <Drawer />
-      </NativeBaseProvider>
+      <NiftyAppProvider>
+        <NativeBaseProvider>
+          <Drawer />
+        </NativeBaseProvider>
+      </NiftyAppProvider>
     );
   }
 }
