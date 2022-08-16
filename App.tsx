@@ -4,6 +4,7 @@ import "react-native-url-polyfill/auto";
 import { Buffer } from "buffer";
 global.Buffer = global.Buffer || Buffer;
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import * as Linking from "expo-linking";
@@ -16,6 +17,7 @@ import { NativeBaseProvider, Button, VStack } from "native-base";
 import MintImageStack from "./routes/MintImageStack";
 import { useFonts } from "expo-font";
 import Drawer from "./routes/Drawer";
+import { NiftyAppProvider } from "./utils/context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -134,11 +136,13 @@ export default function App() {
     return null;
   }
   return (
-    <NativeBaseProvider>
-      <View onLayout={onLayoutRootView}>
-        <Drawer />
-        <StatusBar style="dark" />
-      </View>
-    </NativeBaseProvider>
+    <NiftyAppProvider>
+      <NativeBaseProvider>
+        <View onLayout={onLayoutRootView}>
+          <Drawer />
+          <StatusBar style="dark" />
+        </View>
+      </NativeBaseProvider>
+    </NiftyAppProvider>
   );
 }
