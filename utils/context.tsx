@@ -9,8 +9,8 @@ export const NiftyAppProvider: React.FC<React.ReactNode> = ({ children }) => {
   const initialState: NiftyState = {
     dappkeypair: nacl.box.keyPair(),
     sharedsecret: new Uint8Array([]),
-    phantomWalletPublicKey: "",
-    session: PublicKey.default,
+    phantomWalletPublicKey: PublicKey.default,
+    session: "",
   };
   const [state, setState] = useState(initialState);
 
