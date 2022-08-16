@@ -24,22 +24,11 @@ const styles = StyleSheet.create({
     color: "#333333",
   },
   header: {
+    paddingTop: 12,
     width: "100%",
     height: "100%", //of deafult stack header
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerText: {
-    fontWeight: "500",
-    letterSpacing: 0.3,
-    color: "#333",
-    fontSize: 20,
-    textAlign: "center",
-  },
-  icon: {
-    position: "absolute",
-    left: 10,
+    justifyContent: "space-around",
   },
   card: {
     borderRadius: 6,
