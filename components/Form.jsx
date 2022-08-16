@@ -14,6 +14,7 @@ const MetadataForm = () => {
       // make a post request to the server and get URI back
     }
   };
+
   return (
     <VStack alignItems="center" justifyContent="center" space="10" mx="6" my="10">
       <Heading>Metadata</Heading>

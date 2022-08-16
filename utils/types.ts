@@ -4,8 +4,8 @@ import { PublicKey } from "@solana/web3.js";
 export interface NiftyState {
   dappkeypair: BoxKeyPair;
   sharedsecret: Uint8Array;
-  phantomWalletPublicKey: string;
-  session: PublicKey;
+  phantomWalletPublicKey: PublicKey;
+  session: string;
 }
 
 export type NiftyContext = {

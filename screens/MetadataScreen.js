@@ -6,6 +6,7 @@ const MetadataScreen = () => {
   const handleMinting = () => {
     console.log("Hello");
   };
+
   return (
     <VStack>
       <MetadataForm />
