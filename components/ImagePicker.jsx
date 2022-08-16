@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Button, Image, View, Platform } from "react-native";
+import React, { useState } from "react";
+import { Image, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Button, VStack } from "native-base";
 
 export default function ImagePickerExample() {
   const [image, setImage] = useState(null);
@@ -21,9 +22,11 @@ export default function ImagePickerExample() {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
+    <VStack alignItems="center" justifyContent="center" space="10" mx="4" my="10">
+      <Button size="lg" onPress={pickImage} colorScheme="secondary">
+        Pick an image
+      </Button>
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-    </View>
+    </VStack>
   );
 }

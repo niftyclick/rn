@@ -1,9 +1,10 @@
+import "react-native-reanimated";
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import { Buffer } from "buffer";
 global.Buffer = global.Buffer || Buffer;
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, ScrollView, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Linking from "expo-linking";
 import nacl from "tweetnacl";
@@ -20,10 +21,17 @@ import {
   signTransaction,
 } from "./utils/transactions";
 
+import { NativeBaseProvider, Button, VStack } from "native-base";
+import MintImageStack from "./routes/MintImageStack";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
+import Drawer from "./routes/Drawer";
+
+
 export default function App() {
   const [deepLink, setDeepLink] = useState<string>("");
   const scrollViewRef = useRef<any>(null);
-  const [showCamera, setShowCamera] = useState(false);
+  const [showCamera, setShowCamera] = useState(true);
 
   // store dappKeyPair, sharedSecret, session and account SECURELY on device
   // to avoid having to reconnect users.
@@ -121,62 +129,29 @@ export default function App() {
     }
   }, [deepLink]);
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "#333" }}>
-      <StatusBar style="light" />
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{
-            backgroundColor: "#111",
-            padding: 20,
-            paddingTop: 100,
-            flexGrow: 1,
-          }}
-          ref={scrollViewRef}
-          onContentSizeChange={() => {
-            scrollViewRef.current.scrollToEnd({ animated: true });
-          }}
-          style={{ flex: 1 }}
-        ></ScrollView>
-      </View>
-      {showCamera ? (
-        <View style={{ flex: 0, paddingTop: 20, paddingBottom: 40 }}>
-          <Btn title="Connect" onPress={() => connect(dappKeyPair)} />
-          <Btn title="Disconnect" onPress={() => disconnect(session, sharedSecret, dappKeyPair)} />
-          <Btn
-            title="Sign And Send Transaction"
-            onPress={() =>
-              signAndSendTransaction(session, sharedSecret, dappKeyPair, phantomWalletPublicKey)
-            }
-          />
-          <Btn
-            title="Sign All Transactions"
-            onPress={() =>
-              signAllTransactions(session, sharedSecret, dappKeyPair, phantomWalletPublicKey)
-            }
-          />
-          <Btn
-            title="Sign Transaction"
-            onPress={() =>
-              signTransaction(session, sharedSecret, dappKeyPair, phantomWalletPublicKey)
-            }
-          />
-          <Btn
-            title="Sign Message"
-            onPress={() => signMessage(session, sharedSecret, dappKeyPair)}
-          />
-        </View>
-      ) : (
-        <CameraDetailScreen />
-      )}
-    </View>
-  );
+  let [fontsLoaded] = useFonts({
+    ubuntu: require("./assets/fonts/ubuntu.ttf"),
+    nunito: require("./assets/fonts/nunito.ttf"),
+    shizuru: require("./assets/fonts/Shizuru-Regular.ttf"),
+    headerBold: require("./assets/fonts/TheNautigal-Bold.ttf"),
+    headerNormal: require("./assets/fonts/TheNautigal-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <NativeBaseProvider>
+        <Drawer />
+      </NativeBaseProvider>
+    );
+  }
 }
 
 const Btn = ({ title, onPress }: { title: string; onPress: () => Promise<void> }) => {
   return (
-    <View style={{ marginVertical: 10 }}>
-      <Button title={title} onPress={onPress} />
-    </View>
+    <Button onPress={onPress} colorScheme="secondary" size="md" px="6">
+      {title}
+    </Button>
   );
 };
