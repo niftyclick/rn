@@ -7,8 +7,8 @@ export const NiftyAppContext = React.createContext<NiftyContext>(null);
 
 export const NiftyAppProvider: React.FC<React.ReactNode> = ({ children }) => {
   const initialState: NiftyState = {
-    dappkeypair: nacl.box.keyPair(),
-    sharedsecret: new Uint8Array([]),
+    dappKeyPair: nacl.box.keyPair(),
+    sharedSecret: new Uint8Array([]),
     phantomWalletPublicKey: PublicKey.default,
     session: "",
   };

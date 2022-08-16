@@ -1,7 +1,8 @@
 import { Connection, SystemProgram, Transaction, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
+import nacl, { BoxKeyPair } from "tweetnacl";
 import * as Linking from "expo-linking";
-import { encryptPayload } from "./encryption";
+import { encryptPayload, decryptPayload } from "./encryption";
 import {
   buildUrl,
   NETWORK,
@@ -14,7 +15,7 @@ import {
 
 const connection = new Connection(NETWORK);
 
-export const connect = async (dappKeyPair) => {
+export const connect = async (dappKeyPair: BoxKeyPair) => {
   const params = new URLSearchParams({
     dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
     cluster: "devnet",
@@ -22,11 +23,27 @@ export const connect = async (dappKeyPair) => {
     redirect_link: onConnectRedirectLink,
   });
 
-  const url = buildUrl("connect", params);
-  Linking.openURL(url);
+  const sharedSecretDapp = nacl.box.before(
+    bs58.decode(params.get("phantom_encryption_public_key")!),
+    dappKeyPair.secretKey
+  );
+
+  const connectData = decryptPayload(params.get("data")!, params.get("nonce")!, sharedSecretDapp);
+
+  console.log(JSON.stringify(connectData, null, 2));
+
+  return {
+    sharedSecret: sharedSecretDapp,
+    session: connectData.session,
+    phantomWalletPublicKey: new PublicKey(connectData.public_key),
+  };
 };
 
-export const disconnect = async (session: string, sharedSecret: Uint8Array, dappKeyPair) => {
+export const disconnect = async (
+  session: string,
+  sharedSecret: Uint8Array,
+  dappKeyPair: BoxKeyPair
+) => {
   const payload = {
     session,
   };
@@ -39,13 +56,17 @@ export const disconnect = async (session: string, sharedSecret: Uint8Array, dapp
     payload: bs58.encode(encryptedPayload),
   });
 
-  const url = buildUrl("disconnect", params);
-  Linking.openURL(url);
+  return {
+    params,
+  };
 };
 
-export const signMessage = async (session: string, sharedSecret: Uint8Array, dappKeyPair) => {
-  const message = "To avoid digital dognappers, sign below to authenticate with CryptoCorgis.";
-
+export const signMessage = async (
+  message,
+  session: string,
+  sharedSecret: Uint8Array,
+  dappKeyPair: BoxKeyPair
+) => {
   const payload = {
     session,
     message: bs58.encode(Buffer.from(message)),
@@ -61,8 +82,13 @@ export const signMessage = async (session: string, sharedSecret: Uint8Array, dap
   });
 
   console.log("Signing message...");
-  const url = buildUrl("signMessage", params);
-  Linking.openURL(url);
+  const signMessageData = decryptPayload(params.get("data")!, params.get("nonce")!, sharedSecret);
+
+  console.log(JSON.stringify(signMessageData, null, 2));
+
+  return {
+    data: signMessageData,
+  };
 };
 
 export const createTransferTransaction = async (phantomWalletPublicKey: PublicKey) => {
@@ -82,40 +108,10 @@ export const createTransferTransaction = async (phantomWalletPublicKey: PublicKe
   return transaction;
 };
 
-export const signAndSendTransaction = async (
-  session: string,
-  sharedSecret: Uint8Array,
-  dappKeyPair,
-  phantomWalletPublicKey: PublicKey
-) => {
-  const transaction = await createTransferTransaction(phantomWalletPublicKey);
-
-  const serializedTransaction = transaction.serialize({
-    requireAllSignatures: false,
-  });
-
-  const payload = {
-    session,
-    transaction: bs58.encode(serializedTransaction),
-  };
-  const [nonce, encryptedPayload] = encryptPayload(payload, sharedSecret);
-
-  const params = new URLSearchParams({
-    dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
-    nonce: bs58.encode(nonce),
-    redirect_link: onSignAndSendTransactionRedirectLink,
-    payload: bs58.encode(encryptedPayload),
-  });
-
-  console.log("Sending transaction...");
-  const url = buildUrl("signAndSendTransaction", params);
-  Linking.openURL(url);
-};
-
 export const signTransaction = async (
   session: string,
   sharedSecret: Uint8Array,
-  dappKeyPair,
+  dappKeyPair: BoxKeyPair,
   phantomWalletPublicKey: PublicKey
 ) => {
   const transaction = await createTransferTransaction(phantomWalletPublicKey);

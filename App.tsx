@@ -84,26 +84,7 @@ export default function App() {
       return;
     }
 
-    if (/onConnect/.test(url.pathname)) {
-      const sharedSecretDapp = nacl.box.before(
-        bs58.decode(params.get("phantom_encryption_public_key")!),
-        dappKeyPair.secretKey
-      );
-
-      const connectData = decryptPayload(
-        params.get("data")!,
-        params.get("nonce")!,
-        sharedSecretDapp
-      );
-
-      setSharedSecret(sharedSecretDapp);
-      setSession(connectData.session);
-      setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
-
-      console.log(JSON.stringify(connectData, null, 2));
-    } else if (/onDisconnect/.test(url.pathname)) {
-      console.log("Disconnected!");
-    } else if (/onSignAndSendTransaction/.test(url.pathname)) {
+    if (/onSignAndSendTransaction/.test(url.pathname)) {
       const signAndSendTransactionData = decryptPayload(
         params.get("data")!,
         params.get("nonce")!,
