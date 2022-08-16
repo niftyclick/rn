@@ -1,7 +1,7 @@
 import { Web3Storage, File } from "web3.storage";
 import { API_TOKEN } from "./config";
 
-export const makeStorageClient = () => {
+const makeStorageClient = () => {
 	return new Web3Storage({ token: API_TOKEN });
 };
 
@@ -12,7 +12,7 @@ const getSymbolFromName = (name: string): string => {
 		.join("");
 };
 
-export const makeFileFromJSON = (
+const makeFileFromJSON = (
 	name: string,
 	description: string,
 	image: string,
@@ -43,4 +43,15 @@ export const makeFileFromJSON = (
 	const buffer = Buffer.from(JSON.stringify(data));
 
 	return new File([buffer], `metadata-${data["symbol"]}-${address}.json`);
+};
+
+
+export const storeFile = (name: String, desc: String, image: String, address: String): String => {
+	const file = makeFileFromJSON(name, desc, image, address);
+
+	const client = makeStorageClient();
+	const cid = await client.put([file]);
+	console.log("stored files with cid: ", cid);
+
+	return cid;
 };
