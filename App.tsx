@@ -16,6 +16,7 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
+import { CameraDetailScreen } from "./components/Camera";
 
 const NETWORK = clusterApiUrl("mainnet-beta");
 
@@ -59,6 +60,7 @@ export default function App() {
   const connection = new Connection(NETWORK);
   const addLog = useCallback((log: string) => setLogs((logs) => [...logs, "> " + log]), []);
   const scrollViewRef = useRef<any>(null);
+  const [showCamera, setShowCamera] = useState(false);
 
   // store dappKeyPair, sharedSecret, session and account SECURELY on device
   // to avoid having to reconnect users.
@@ -340,7 +342,9 @@ export default function App() {
           ))}
         </ScrollView>
       </View>
-      <View style={{ flex: 0, paddingTop: 20, paddingBottom: 40 }}>
+      {showCamera ?
+
+        <View style={{ flex: 0, paddingTop: 20, paddingBottom: 40 }}>
         <Btn title="Connect" onPress={connect} />
         <Btn title="Disconnect" onPress={disconnect} />
         <Btn title="Sign And Send Transaction" onPress={signAndSendTransaction} />
@@ -348,6 +352,9 @@ export default function App() {
         <Btn title="Sign Transaction" onPress={signTransaction} />
         <Btn title="Sign Message" onPress={signMessage} />
       </View>
+      :
+      <CameraDetailScreen />
+}
     </View>
   );
 }
