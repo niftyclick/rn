@@ -2,6 +2,8 @@ import { Camera } from "expo-camera";
 import React, { useRef, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import { StyleSheet, TouchableOpacity, View, Image, Button, Text } from "react-native";
+import { EvilIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export function CameraDetailScreen() {
   const [type, setType] = useState("back");
@@ -51,10 +53,10 @@ export function CameraDetailScreen() {
         <Camera style={styles.camera} type={type} ref={ref} autoFocus ratio="16:9">
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.repeat} onPress={toggleCameraType}>
-              <Text>Toggle</Text>
+              <Ionicons name="camera-reverse" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.cameraIcon} onPress={_takePhoto}>
-              <Text> Click</Text>
+              <EvilIcons name="camera" size={24} color="black" />
             </TouchableOpacity>
           </View>
         </Camera>
