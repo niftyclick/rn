@@ -342,19 +342,18 @@ export default function App() {
           ))}
         </ScrollView>
       </View>
-      {showCamera ?
-
+      {showCamera ? (
         <View style={{ flex: 0, paddingTop: 20, paddingBottom: 40 }}>
-        <Btn title="Connect" onPress={connect} />
-        <Btn title="Disconnect" onPress={disconnect} />
-        <Btn title="Sign And Send Transaction" onPress={signAndSendTransaction} />
-        <Btn title="Sign All Transactions" onPress={signAllTransactions} />
-        <Btn title="Sign Transaction" onPress={signTransaction} />
-        <Btn title="Sign Message" onPress={signMessage} />
-      </View>
-      :
-      <CameraDetailScreen />
-}
+          <Btn title="Connect" onPress={connect} />
+          <Btn title="Disconnect" onPress={disconnect} />
+          <Btn title="Sign And Send Transaction" onPress={signAndSendTransaction} />
+          <Btn title="Sign All Transactions" onPress={signAllTransactions} />
+          <Btn title="Sign Transaction" onPress={signTransaction} />
+          <Btn title="Sign Message" onPress={signMessage} />
+        </View>
+      ) : (
+        <CameraDetailScreen />
+      )}
     </View>
   );
 }

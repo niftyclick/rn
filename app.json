@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "deep-link-demo-app",
-    "slug": "deep-link-demo-app",
-    "owner": "phantom-wallet",
+    "name": "NiftyClick",
+    "slug": "nifty-click",
+    "owner": "ritvij14",
     "privacy": "hidden",
     "version": "1.0.0",
     "scheme": "deep-link-demo-app",
@@ -10,9 +10,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
         "expo-media-library",
