@@ -1,12 +1,3 @@
-# Deep linking API demo application
-This repo contains a demo application written with React Native that showcases Phantom's deep linking API.
+# NiftyClick - Click. Edit. Mint.
 
-[API Documentation](https://docs.phantom.app/integrating/deeplinks)
-
-## Getting started
-```sh
-# install dependencies
-$ yarn 
-# start metro bundler
-$ yarn start
-```
+Built at Solana Summer Camp '22. By @ritvij14, @priyansh71 & @arihantbansal.
