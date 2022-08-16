@@ -27,7 +27,6 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Drawer from "./routes/Drawer";
 
-
 export default function App() {
   const [deepLink, setDeepLink] = useState<string>("");
   const scrollViewRef = useRef<any>(null);
