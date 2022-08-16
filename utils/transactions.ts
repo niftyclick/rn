@@ -9,7 +9,6 @@ import {
   onDisconnectRedirectLink,
   onSignMessageRedirectLink,
   onSignTransactionRedirectLink,
-  onSignAllTransactionsRedirectLink,
   onSignAndSendTransactionRedirectLink,
 } from "./helpers";
 
@@ -110,44 +109,6 @@ export const signAndSendTransaction = async (
 
   console.log("Sending transaction...");
   const url = buildUrl("signAndSendTransaction", params);
-  Linking.openURL(url);
-};
-
-export const signAllTransactions = async (
-  session: string,
-  sharedSecret: Uint8Array,
-  dappKeyPair,
-  phantomWalletPublicKey: PublicKey
-) => {
-  const transactions = await Promise.all([
-    createTransferTransaction(phantomWalletPublicKey),
-    createTransferTransaction(phantomWalletPublicKey),
-  ]);
-
-  const serializedTransactions = transactions.map((t) =>
-    bs58.encode(
-      t.serialize({
-        requireAllSignatures: false,
-      })
-    )
-  );
-
-  const payload = {
-    session,
-    transactions: serializedTransactions,
-  };
-
-  const [nonce, encryptedPayload] = encryptPayload(payload, sharedSecret);
-
-  const params = new URLSearchParams({
-    dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
-    nonce: bs58.encode(nonce),
-    redirect_link: onSignAllTransactionsRedirectLink,
-    payload: bs58.encode(encryptedPayload),
-  });
-
-  console.log("Signing transactions...");
-  const url = buildUrl("signAllTransactions", params);
   Linking.openURL(url);
 };
 

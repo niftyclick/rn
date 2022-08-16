@@ -4,28 +4,20 @@ import "react-native-url-polyfill/auto";
 import { Buffer } from "buffer";
 global.Buffer = global.Buffer || Buffer;
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Platform, ScrollView, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import * as SplashScreen from "expo-splash-screen";
 import * as Linking from "expo-linking";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { CameraDetailScreen } from "./components/Camera";
 import { decryptPayload } from "./utils/encryption";
-import {
-  connect,
-  disconnect,
-  signMessage,
-  signAndSendTransaction,
-  signAllTransactions,
-  signTransaction,
-} from "./utils/transactions";
-
 import { NativeBaseProvider, Button, VStack } from "native-base";
 import MintImageStack from "./routes/MintImageStack";
-import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Drawer from "./routes/Drawer";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [deepLink, setDeepLink] = useState<string>("");
@@ -38,6 +30,14 @@ export default function App() {
   const [sharedSecret, setSharedSecret] = useState<Uint8Array>();
   const [session, setSession] = useState<string>();
   const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useState<PublicKey>();
+
+  let [fontsLoaded] = useFonts({
+    ubuntu: require("./assets/fonts/ubuntu.ttf"),
+    nunito: require("./assets/fonts/nunito.ttf"),
+    shizuru: require("./assets/fonts/Shizuru-Regular.ttf"),
+    headerBold: require("./assets/fonts/TheNautigal-Bold.ttf"),
+    headerNormal: require("./assets/fonts/TheNautigal-Regular.ttf"),
+  });
 
   useEffect(() => {
     (async () => {
@@ -55,6 +55,20 @@ export default function App() {
   const handleDeepLink = ({ url }: Linking.EventType) => {
     setDeepLink(url);
   };
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   // handle inbounds links
   useEffect(() => {
@@ -95,18 +109,6 @@ export default function App() {
       );
 
       console.log(JSON.stringify(signAndSendTransactionData, null, 2));
-    } else if (/onSignAllTransactions/.test(url.pathname)) {
-      const signAllTransactionsData = decryptPayload(
-        params.get("data")!,
-        params.get("nonce")!,
-        sharedSecret
-      );
-
-      const decodedTransactions = signAllTransactionsData.transactions.map((t: string) =>
-        Transaction.from(bs58.decode(t))
-      );
-
-      console.log(JSON.stringify(decodedTransactions, null, 2));
     } else if (/onSignTransaction/.test(url.pathname)) {
       const signTransactionData = decryptPayload(
         params.get("data")!,
@@ -128,29 +130,15 @@ export default function App() {
     }
   }, [deepLink]);
 
-  let [fontsLoaded] = useFonts({
-    ubuntu: require("./assets/fonts/ubuntu.ttf"),
-    nunito: require("./assets/fonts/nunito.ttf"),
-    shizuru: require("./assets/fonts/Shizuru-Regular.ttf"),
-    headerBold: require("./assets/fonts/TheNautigal-Bold.ttf"),
-    headerNormal: require("./assets/fonts/TheNautigal-Regular.ttf"),
-  });
-
   if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <NativeBaseProvider>
-        <Drawer />
-      </NativeBaseProvider>
-    );
+    return null;
   }
-}
-
-const Btn = ({ title, onPress }: { title: string; onPress: () => Promise<void> }) => {
   return (
-    <Button onPress={onPress} colorScheme="secondary" size="md" px="6">
-      {title}
-    </Button>
+    <NativeBaseProvider>
+      <View onLayout={onLayoutRootView}>
+        <Drawer />
+        <StatusBar style="dark" />
+      </View>
+    </NativeBaseProvider>
   );
-};
+}
