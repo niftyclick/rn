@@ -1,10 +1,9 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
 import MintImageStack from "./MintImageStack";
 import ShowMintsStack from "./ShowMintsStack";
 
 const Drawer = createDrawerNavigator();
-
 
 const DrawerNavigator = () => {
   return (
@@ -15,6 +14,6 @@ const DrawerNavigator = () => {
       </Drawer.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 export default DrawerNavigator;

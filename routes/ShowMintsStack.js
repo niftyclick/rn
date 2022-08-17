@@ -1,5 +1,5 @@
 import React from "react";
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from "@react-navigation/stack";
 import MintsScreen from "../screens/MintsScreen";
 
 const Stack = createStackNavigator();
@@ -10,6 +10,6 @@ const MintsStackNavigator = () => {
       <Stack.Screen name="Mints" component={MintsScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
-}
+};
 
 export default MintsStackNavigator;
