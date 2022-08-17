@@ -5,7 +5,11 @@ import { NiftyContext, NiftyState } from "./types";
 
 export const NiftyAppContext = React.createContext<NiftyContext>(null);
 
-export const NiftyAppProvider: React.FC<React.ReactNode> = ({ children }) => {
+interface Props {
+  children?: React.ReactNode;
+}
+
+export const NiftyAppProvider: React.FC<Props> = ({ children }) => {
   const initialState: NiftyState = {
     dappKeyPair: nacl.box.keyPair(),
     sharedSecret: new Uint8Array([]),

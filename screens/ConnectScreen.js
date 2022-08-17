@@ -12,6 +12,8 @@ const ConnectScreen = (props) => {
 
     updateState(data);
     setConnected(true);
+
+    console.log(data);
   };
 
   return (
@@ -21,7 +23,7 @@ const ConnectScreen = (props) => {
           Select Image
         </Button>
       ) : (
-        <Button colorScheme="secondary" w="1/2" onPress={handleConnect}>
+        <Button colorScheme="secondary" w="1/2" onPress={() => handleConnect()}>
           Connect Wallet
         </Button>
       )}

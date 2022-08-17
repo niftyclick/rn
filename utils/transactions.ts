@@ -16,6 +16,7 @@ import {
 const connection = new Connection(NETWORK);
 
 export const connect = async (dappKeyPair: BoxKeyPair) => {
+  console.log({ dappKeyPair });
   const params = new URLSearchParams({
     dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
     cluster: "devnet",
@@ -23,20 +24,8 @@ export const connect = async (dappKeyPair: BoxKeyPair) => {
     redirect_link: onConnectRedirectLink,
   });
 
-  const sharedSecretDapp = nacl.box.before(
-    bs58.decode(params.get("phantom_encryption_public_key")!),
-    dappKeyPair.secretKey
-  );
-
-  const connectData = decryptPayload(params.get("data")!, params.get("nonce")!, sharedSecretDapp);
-
-  console.log(JSON.stringify(connectData, null, 2));
-
-  return {
-    sharedSecret: sharedSecretDapp,
-    session: connectData.session,
-    phantomWalletPublicKey: new PublicKey(connectData.public_key),
-  };
+  const url = buildUrl("signTransaction", params);
+  Linking.openURL(url);
 };
 
 export const disconnect = async (
@@ -62,7 +51,7 @@ export const disconnect = async (
 };
 
 export const signMessage = async (
-  message,
+  message: string,
   session: string,
   sharedSecret: Uint8Array,
   dappKeyPair: BoxKeyPair
