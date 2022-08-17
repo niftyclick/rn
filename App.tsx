@@ -1,6 +1,7 @@
 import "react-native-reanimated";
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
+import 'react-native-gesture-handler';
 import { Buffer } from "buffer";
 global.Buffer = global.Buffer || Buffer;
 import { registerRootComponent } from 'expo';
@@ -12,20 +13,17 @@ import * as Linking from "expo-linking";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { PublicKey, Transaction } from "@solana/web3.js";
-import { CameraDetailScreen } from "./components/Camera";
 import { decryptPayload } from "./utils/encryption";
 import { NativeBaseProvider, Button, VStack } from "native-base";
-import MintImageStack from "./routes/MintImageStack";
 import { useFonts } from "expo-font";
-import Drawer from "./routes/Drawer";
 import { NiftyAppProvider } from "./utils/context";
+import DrawerNavigator from "./routes/Drawer";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [deepLink, setDeepLink] = useState<string>("");
   const scrollViewRef = useRef<any>(null);
-  const [showCamera, setShowCamera] = useState(true);
 
   // store dappKeyPair, sharedSecret, session and account SECURELY on device
   // to avoid having to reconnect users.
@@ -59,19 +57,19 @@ export default function App() {
     setDeepLink(url);
   };
 
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
+  // useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
 
-    prepare();
-  }, []);
+  //   prepare();
+  // }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
 
   // handle inbounds links
   useEffect(() => {
@@ -120,10 +118,10 @@ export default function App() {
   return (
     <NiftyAppProvider>
       <NativeBaseProvider>
-        <View onLayout={onLayoutRootView}>
-          <Drawer />
+        {/* <View onLayout={onLayoutRootView}> */}
+          <DrawerNavigator />
           <StatusBar style="dark" />
-        </View>
+        {/* </View> */}
       </NativeBaseProvider>
     </NiftyAppProvider>
   );

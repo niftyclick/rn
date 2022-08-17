@@ -1,29 +1,15 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation-stack";
-import Header from "../components/Header";
+import { createStackNavigator } from '@react-navigation/stack';
 import MintsScreen from "../screens/MintsScreen";
 
-const screens = {
-  Mints: {
-    screen: MintsScreen,
-    navigationOptions: (props) => {
-      return {
-        headerTitle: () => <Header navigation={props.navigation} title="Minted NFTs" />,
-      };
-    },
-  },
-};
+const Stack = createStackNavigator();
 
-const ShowMintsStack = createStackNavigator(screens, {
-  defaultNavigationOptions: {
-    headerTintColor: "#111",
-    headerStyle: {
-      backgroundColor: "#eee",
-      height: 100,
-      borderBottomColor: "#444",
-      borderBottomWidth: 1,
-    },
-  },
-});
+const MintsStackNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="View Images">
+      <Stack.Screen name="Mints" component={MintsScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
 
-export default ShowMintsStack;
+export default MintsStackNavigator;

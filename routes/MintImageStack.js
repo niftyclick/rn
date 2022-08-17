@@ -1,43 +1,19 @@
-import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from '@react-navigation/stack';
 import ConnectScreen from "../screens/ConnectScreen";
 import ImageScreen from "../screens/ImageScreen";
 import MetadataScreen from "../screens/MetadataScreen";
-import Header from "../components/Header";
 
-const screens = {
-  Connect: {
-    screen: ConnectScreen,
-    navigationOptions: (props) => {
-      return {
-        headerTitle: () => <Header navigation={props.navigation} title="Niftyclick" />,
-      };
-    },
-  },
-  Images: {
-    screen: ImageScreen,
-    navigationOptions: {
-      title: "Select Image",
-    },
-  },
-  Metadata: {
-    screen: MetadataScreen,
-    navigationOptions: {
-      title: "Add your metadata",
-    },
-  },
-};
 
-const MintImageStack = createStackNavigator(screens, {
-  defaultNavigationOptions: {
-    headerTintColor: "#111",
-    headerStyle: {
-      backgroundColor: "#eee",
-      height: 100,
-      borderBottomColor: "#444",
-      borderBottomWidth: 1,
-    },
-  },
-});
+const Stack = createStackNavigator();
 
-export default createAppContainer(MintImageStack);
+const MintStackNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="Connect">
+      <Stack.Screen name="Connect" component={ConnectScreen} options={{ headerShown: false, headerBackAccessibilityLabel : true }} />
+      <Stack.Screen name="Images" component={ImageScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Metadata" component={MetadataScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
+
+export default MintStackNavigator;
